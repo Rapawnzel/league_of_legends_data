@@ -1,3 +1,45 @@
+
+
+//Graph:
+
+document.addEventListener('DOMContentLoaded', function () {
+    var myChart = Highcharts.chart('container', {
+        chart: {
+            alignTicks: false,
+            type: 'bar'
+        },
+        title: {
+            text: 'Champion Masteries'
+        },
+        xAxis: [{
+            categories: arrayOfChampionNames
+        }],
+        yAxis: [{
+            title: {
+                text: 'Mastery Level'
+            }},{
+            title:{
+                text: 'Mastery Points'
+            },
+            opposite: true
+        }],
+        series: [{
+            type: 'column',
+            name: 'Mastery Points',
+            yAxis:1,
+            data: arrayOfChampionPoints
+        }, {
+            type: 'line',
+            name: 'Mastery Level',
+            data: arrayOfChampionLevel
+        }]
+    });
+});
+
+
+
+
+
 championMasteryData = [
     {
         "championLevel": 7,
@@ -1240,13 +1282,19 @@ championData = {
 
 
 let championDataArray = Object.entries(championData);
+let arrayOfChampionNames = [];
+let arrayOfChampionLevel =[];
+let arrayOfChampionPoints =[];
 
 for (mastery of championMasteryData){
     for (i=0; i < championDataArray.length; i++){
         if (mastery["championId"] == championDataArray[i][1]["key"]){
-            let championName = championDataArray[i][1]["name"];
-            console.log(`I have ${mastery["championPoints"]} mastery points with ${championName}`);
-            console.log(`I have mastery ${mastery["championLevel"]} with ${championName}`);
+            arrayOfChampionNames.push(championDataArray[i][1]["name"]);
+            arrayOfChampionPoints.push(mastery["championPoints"]);
+            arrayOfChampionLevel.push(mastery["championLevel"]);
+            //let championName = championDataArray[i][1]["name"];
+            //console.log(`I have ${mastery["championPoints"]} mastery points with ${championName}`);
+            //console.log(`I have mastery ${mastery["championLevel"]} with ${championName}`);
         }
     }
 }
