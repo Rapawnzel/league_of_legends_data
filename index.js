@@ -8,6 +8,17 @@ document.addEventListener('DOMContentLoaded', function () {
             alignTicks: false,
             type: 'bar'
         },
+        //Change label to show last time the champion was played
+        tooltip: {
+            shared: true,
+            formatter: function() {
+                var result;
+                $.each(this.points, function() {
+                    result = '<b>' + arrayOfChampionNames[arrayOfChampionNames.indexOf(this.x)] + '</b><br /> Mastery Points:' + arrayOfChampionPoints[arrayOfChampionNames.indexOf(this.x)] + '<br>Last played:' + arrayOfChampionLastTimePlayedFormatted[arrayOfChampionNames.indexOf(this.x)];
+                                });
+                return result;
+            }
+        },
         title: {
             text: 'Champion Masteries'
         },
@@ -1283,8 +1294,10 @@ championData = {
 
 let championDataArray = Object.entries(championData);
 let arrayOfChampionNames = [];
-let arrayOfChampionLevel =[];
-let arrayOfChampionPoints =[];
+let arrayOfChampionLevel = [];
+let arrayOfChampionPoints = [];
+let arrayOfChampionLastTimePlayed = [];
+let arrayOfChampionLastTimePlayedFormatted = [];
 
 for (mastery of championMasteryData){
     for (i=0; i < championDataArray.length; i++){
@@ -1292,9 +1305,34 @@ for (mastery of championMasteryData){
             arrayOfChampionNames.push(championDataArray[i][1]["name"]);
             arrayOfChampionPoints.push(mastery["championPoints"]);
             arrayOfChampionLevel.push(mastery["championLevel"]);
+            arrayOfChampionLastTimePlayed.push(mastery["lastPlayTime"])
             //let championName = championDataArray[i][1]["name"];
             //console.log(`I have ${mastery["championPoints"]} mastery points with ${championName}`);
             //console.log(`I have mastery ${mastery["championLevel"]} with ${championName}`);
         }
     }
 }
+
+//Moment last played:
+function getMoment(time) {
+   //const timeLastPlayed = moment(time).format("D-M-Y")
+    const timePast = moment(time).fromNow();
+    //const formattedTimePast = timePast.format('HH:mm:ss');
+    return timePast;
+}
+
+for (i=0; i < arrayOfChampionLastTimePlayed.length; i++){
+    arrayOfChampionLastTimePlayedFormatted[i] = getMoment(arrayOfChampionLastTimePlayed[i]);
+}
+
+
+
+//REGULAR COUNTER TO MIDNIGHT:
+
+function getCounter() {
+    const end = moment().endOf('day');
+        const timeLeft = moment(end.diff(moment())).utc();
+        const formatted = timeLeft.format('HH:mm:ss'); 
+        console.log(formatted);
+}
+$(window).ready(()=>{getCounter()})
